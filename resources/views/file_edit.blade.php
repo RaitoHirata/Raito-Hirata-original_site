@@ -1,8 +1,8 @@
 
 
 
-<?php
-    $fp = fopen("$scorelink->path", "r");
+<?php/*
+    $fp = fopen($scorelink->path, "a+");
  while (!feof($fp)) {
    echo fgets($fp).'<br>';
     }
@@ -11,13 +11,13 @@
   //  dd(session('flag'));
     if (!null == session('flag')){
     $fp = fopen("$scorelink->path", "a+");
-    fwrite($fp, session('memo'));
-    rewind($fp);
-    while (!feof($fp)) {
+    fwrite($fp, "test");
+    //rewind($fp);
+   /* while (!feof($fp)) {
     echo fgets($fp).'<br>';
     }
     fclose($fp);
-}
+}*/
 ?>
 
             

@@ -38,7 +38,11 @@
                     </table>
                     <input type="submit" name="updatebutton" value="更新" >
                 </form>
+                @if(!null == (session('updatemsg')))
+                 <p>{{ '更新しました。'}}</p>
+                @endif
         </div>
+        
         <pre> <div class = "scorefile">{{ readfile($scoredata_detail->path) }}</div> </pre>
         <a class = return href="{{ route('scoredata') }}">楽譜データ編集画面へ</a>
 <!--

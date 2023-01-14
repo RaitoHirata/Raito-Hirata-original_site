@@ -81,12 +81,9 @@
             </div>
         </div>
         <?php $role = session('role'); ?> 
-        @if($role == 0)
-            <a class = 'return_login_search' href="{{ route('login_search') }}">HOME画面へ</a>
-        @else 
+       
             <a class = 'return_login_search' href="{{ route('manager_home') }}">HOME画面へ</a>
-        @endif
-          
+      
         
     </body>
 </html>

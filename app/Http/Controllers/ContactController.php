@@ -31,16 +31,24 @@ class ContactController extends Controller
     //一般会員楽譜検索処理
     public function search(Request $request)
     {
+        session()->forget('user_id');
         $request->session()->flash('send',$request->send);
         $request->session()->flash('massage',$request->search);
         $search = $request->input('search');
+        session()->flash('search',$request->search);
         $searchtitle = $request->input('send');
         if(isset($search)){
+            $spaceConversion = mb_convert_kana($search, 's');
+            $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+            foreach($wordArraySearched as $value){
                 $scores = score::select('id','artist_name as artist_name','song_name as song_name')
-                        ->where('artist_name','like', '%'.$search.'%')
-                        ->orwhere('song_name','like', '%'.$search.'%')
-                        ->orwhere('role',1)
+                        ->where('role',1)
+                        ->where(function($query) use($value) {
+                            $query->where('artist_name','like', '%'. $value .'%')
+                                ->orwhere('song_name','like', '%'. $value .'%');
+                        })                        
                         ->get();
+            }
                 return view('index', ['scores'=>$scores] , ['log_comment'=>'1']);
         } else {
             return view('index');
@@ -51,6 +59,7 @@ class ContactController extends Controller
     //一般会員楽譜表示
     public function scorelink(Request $request)
     {
+        session()->forget('user_id');
         $id = $request->id;
         $scorelink = score::select
             ('artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
@@ -61,9 +70,13 @@ class ContactController extends Controller
     //ログイン画面楽譜検索処理
     public function loginSearch(Request $request)
     {
+       if(session('user_id')== null){
+        return redirect()->back();
+       }
         $request->session()->flash('send',$request->send);
         $id = session('user_id');
       //  dd(session('mylist'));
+        session()->flash('search',$request->search);
         $search = $request->input('search');
         $mylist = user_score::
                   join('user','user_id', '=', 'user.id')
@@ -74,11 +87,17 @@ class ContactController extends Controller
         $url = url()->previous();
         $referer = '/login';
         if(isset($search)){
+            $spaceConversion = mb_convert_kana($search, 's');
+            $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+            foreach($wordArraySearched as $value){
                 $scores = score::select('id','artist_name as artist_name','song_name as song_name')
-                        ->where('artist_name','like', '%'.$search.'%')
-                        ->orwhere('song_name','like', '%'.$search.'%')
-                        ->orwhere('role',1)
+                        ->where('role',1)
+                        ->where(function($query) use($value) {
+                            $query->where('artist_name','like', '%'. $value .'%')
+                                ->orwhere('song_name','like', '%'. $value .'%');
+                        })                        
                         ->get();
+            }
                 if (!strstr($url,$referer)){
                     return view('manager_home',['log_comment'=>'1'],['scores'=>$scores ,'mylist'=>$mylist ] );
                 } else {
@@ -97,6 +116,9 @@ class ContactController extends Controller
     //ログイン画面楽譜表示処理
     public function loginScorelink(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $role = session('role');
         $id = $request->id;
         $mylisted = user_score::select('list')->where('list',$id)->first();
@@ -109,6 +131,7 @@ class ContactController extends Controller
     //ログインフォーム画面open
     public function login(Request $request)
     {
+        session()->forget('user_id');
         $url = url()->previous();
         $referer = '/login';
         if (!strstr($url,$referer)){
@@ -120,6 +143,7 @@ class ContactController extends Controller
      //ログイン完了処理
     public function loginComplete(Request $request)
     {
+                
         $id = $request->id;
    //     $mylisted = user_score::select('list')->where('list',$id)->first();
         $scorelink = score::select
@@ -131,13 +155,16 @@ class ContactController extends Controller
             $mylist = user_score::
                         join('user','user_id', '=', 'user.id')
                         ->join('score','list', '=', 'score.id' )
+                        ->where('user_id','=',2)
                         ->get();
             session()->put(['mylist' =>$mylist]);
             //    dd($mylist);
             session()->flush('email');
             session()->forget('password');
+            session()->put('user_id',2);
             return view('manager_home',['mylist'=>$mylist]);
         } 
+        
         $user = user::where('email',$request->email)->get();
         if (count($user) === 0 || empty($password)){
             return view('/login',['login_error'=>'1']);
@@ -166,12 +193,15 @@ class ContactController extends Controller
         } else {
             return view('/login',['login_error'=>'1']);
         }
-        
+
+   
+
     }
 
     //ログイン後会員ホーム画面open
     public function userHome(Request $request)
     {
+        
         return view('user_home');
     }
     
@@ -189,6 +219,9 @@ class ContactController extends Controller
     //管理者新規登録画面open
     public function mngregister(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $url = url()->previous();
         $referer = '/mng_register';
         if (!strstr($url,$referer)){
@@ -206,6 +239,8 @@ class ContactController extends Controller
             'password'  => ['required',Password::min(8)->letters()->numbers()],
         ],
         [   
+            'email.required' => 'メールアドレスは必須入力です。',
+            'email.email' => 'メールアドレスは正しく入力してください。',
             'password.required' => 'パスワードは必須入力です。',
             'password.min' => 'パスワードは半角英数字を1つずつ含む8文字以上としてください。',
         ]);
@@ -349,6 +384,10 @@ class ContactController extends Controller
     //楽譜編集/アップロード画面open
     public function scoreData()
     {
+       
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $scoredata = score::select()->paginate(env("PAGE_MAX_LIMIT"));
         return view('scoredata',compact('scoredata'),['scoredata' => $scoredata]);
     }
@@ -368,6 +407,9 @@ class ContactController extends Controller
     //楽譜新規登録処理
     public function uplode(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $validator = Validator::make($request->all(), [
             'artist_name' => 'required|max:255|',
             'song_name' => 'required|max:255|',
@@ -387,11 +429,11 @@ class ContactController extends Controller
             $score = new score();
             $dir = 'Slow-high';
             $filename = $request->file('file')->getClientOriginalName();
-            $file = $request->file('file')->storeAs('public/Slow-high/',$filename,'');
+            $file = $request->file('file')->storeAs('',$filename);
             $score->artist_name = $request->input('artist_name');
             $score->song_name = $request->input('song_name');
             $score->score = $filename;
-            $path = 'storage/' . $dir . '/' . $filename;
+            $path =  "../storage/app/" . $file;
             $score->path = $path;
             $score->role = '0';
             $score->created_at = now();
@@ -403,16 +445,23 @@ class ContactController extends Controller
     //楽譜詳細画面open
     public function scoreDetail(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $id = $request->id;
         $scoredata_detail = score::select
             ('artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
             ->where('id','=',$id)->first();
-        return view('scoredata_detail',compact('scoredata_detail'),['scoredata_detail'=>$scoredata_detail],($scoredata_detail->path));
+      //      dd($scoredata_detail->path);
+        return view('scoredata_detail',compact('scoredata_detail'),['scoredata_detail'=>$scoredata_detail]);
     }
 
     //楽譜編集画面open
     public function scoreedit(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $id = $request->id;
         session()->put('id',$id);
         $scoredata_detail = score::select
@@ -424,6 +473,9 @@ class ContactController extends Controller
     //楽譜編集
     public function update(Request $request)
     {
+        if(session('user_id')== null){
+            return view( 'index');
+        }
         $id = session()->get('id');
         $validator = Validator::make($request->all(), [
             'artist_name' => 'required|max:255|',
@@ -441,18 +493,19 @@ class ContactController extends Controller
         } else {
             $score = new score();
             $dir = 'Slow-high';
-            $filename = $request->file('file')->getClientOriginalName();
-            $file = $request->file('file')->storeAs('public/Slow-high/',$filename,'');
-            $path = 'storage/' . $dir . '/' . $filename;
+       //     $filename = $request->file('file')->getClientOriginalName();
+        //    $file = $request->file('file')->storeAs('public/Slow-high/',$filename,'');
+       //     $path = 'storage/' . $dir . '/' . $filename;
             $score->where('id','=',$id)->update([
                 'artist_name' => $request->artist_name,
                 'song_name' => $request->song_name,
-                'score' => $filename,
-                'path' => $path,
+       //         'score' => $filename,
+         //      'path' => $path,
                 'role' => 0,
                 'created_at' => now()
                 ]);
-
+            if (isset($request->updatebutton))
+                {   session()->flash('updatemsg',1); }
             return redirect()->back();
         }
     }
@@ -520,20 +573,83 @@ class ContactController extends Controller
         $scorelink = score::select
             ('id' , 'artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
             ->where('id','=',$id)->first();
-        return view('user_score_edit',compact('scorelink'),['scorelink'=>$scorelink , 'mylisted'=>$mylisted ],$id,$role);
+        $content = file_get_contents( $scorelink->path );
+        $rows = explode("\n", $content);
+        session()->put('rows',$rows);
+       
+        return view('user_score_edit',compact('scorelink'),['scorelink'=>$scorelink , 'mylisted'=>$mylisted ,'rows'=>$rows],$id,$role);
     }
 
     public function userScoreedit(Request $request)
     {
-        session()->put('memo',$request->memo);
+       
+   
+         foreach (session('rows') as  $key => $value ) {
+       
+                foreach ($request->memo as $value){
+                    $memo = [
+                    'memo' => $request->memo
+                ];
+                };
+            
+         
+            }
+      
+        dd($memo);
+        $request->session()->put('memo.key',"memo".$request->memo.$key);
+      
         $flag = 1;
         session()->put('flag',$flag);
         $role = session('role');
         $id = $request->id;
-        $mylisted = user_score::select('list')->where('list',$id)->first();
+    //    dd(session(
+      //  ));
+      
         $scorelink = score::select
-            ('id' , 'artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
-            ->where('id','=',$id)->first();
+        ('id' , 'artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
+        ->where('id','=',$id)->first();
+        
+        $content = file_get_contents( $scorelink->path );
+        $rows = explode("\n", $content);
+        $rows = $request->memo;
+        dd($request->memo);
+        file_put_contents( "test.txt", $rows,FILE_APPEND);
+             
+        
+        /*
+        $file_path = dirname(__FILE__) . "/../../../storage/app/test.txt";
+        $data_serialize = serialize($rows);
+        
+   //ファイルに保存
+         file_put_contents($file_path, $data_serialize, LOCK_EX);
+ 
+//保存したファイルのパーミッションを644にする
+        chmod($file_path, 0644);
+
+        $data_serialize = file_get_contents($file_path);
+ */
+        
+        /*
+        file_put_contents( $scorelink->path, implode("\n", $rows));
+     //   $rows = explode("\n", $content);
+    /*   $fp = fopen($content, "a+");
+        fwrite($fp,$request->memo2);
+        
+       // rewind($fp);
+       /* while (!feof($fp)) {
+        echo fgets($fp).'<br>';
+        }
+        fclose($fp);*/
+
+        /*foreach ($rows as $row) {
+            $fp=fopen($content,"a+");
+            fwrite($fp,$request->memo2);
+            fclose($fp);
+        }*/
+        
+
+        $mylisted = user_score::select('list')->where('list',$id)->first();
+       
            // dd(session('flag'));
         return redirect()->back();
     }

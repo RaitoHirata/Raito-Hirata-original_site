@@ -25,7 +25,7 @@ Route::get('/', function () {
 Route::get('/login','Contactcontroller@login')->name('login');
 Route::post('/login','Contactcontroller@loginComplete')->name('login.home');
 Route::get('/register','Contactcontroller@register')->name('register');
-Route::get('/login/user_home','Contactcontroller@userHome')->name('user_home');
+Route::get('/login/search','Contactcontroller@userHome')->name('user_home');
 Route::get('/score','Contactcontroller@scorelink')->name('scorelink');
 Route::get('/login/score','Contactcontroller@loginScorelink')->name('login_scorelink');
 Route::get('/login/search','Contactcontroller@loginSearch')->name('login_search');

@@ -19,7 +19,8 @@
             <p>キーワードで探す</p>
             <form method ='POST' action =''>
                 @csrf
-                <input class = "serch" type="text" name="serch" placeholder = "キーワードを入力してください。(曲名・アーテイスト名)" >
+                <input class = "serch" type="text" name="serch" placeholder = "キーワードを入力してください。(曲名・アーテイスト名)"
+                        value="{{ session(search) }}" >
                 <input class = "button" type="submit" value="検索">
             </form>
         </div>

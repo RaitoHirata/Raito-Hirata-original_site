@@ -1,7 +1,8 @@
 <p>キーワードで探す</p>
     <form method ='POST' action ="{{ route('search') }}">
         @csrf
-        <input class = "search" type="text" name="search" placeholder = "キーワードを入力してください。(曲名・アーテイスト名)" value="@if (Session::has('massage')){{ Session::get('massage') }}@endif">
+        <input class = "search" type="text" name="search" placeholder = "キーワードを入力してください。(曲名・アーテイスト名)" 
+                value="{{ session('search') }}">
         <input class = "search_button" type="submit" name="send" value="検索">
     </form>
 <div class = 'search_result'> 
@@ -12,6 +13,7 @@
             <tr>
                 <th class ="search_result_artist_title">アーティスト名</th>
                 <th class ="search_result_song_title">曲名</th>
+                <th class ="search_result_mylist_title_hidden"></th>
             </tr>
     @endif
     @if(isset($log_comment))

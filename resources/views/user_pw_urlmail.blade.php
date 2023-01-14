@@ -25,8 +25,10 @@
                     <p>以下に登録したメールアドレスを入力して、送信されたメールのURLよりパスワードの再設定を行ってください。</p>
                     <form method ='POST' action ="{{ route('user_pw_urlmail') }}">
                         @csrf
-                        <p>メールアドレス　<input class = "email" type="text" name="email" placeholder = "メールアドレスを入力してください。" ></p>
+                        <div class='mailinput'>
+                            <p>メールアドレス　<input class = "email" type="text" name="email" placeholder = "メールアドレスを入力してください。" ></p>
                         <br>
+                        </div>
                         <input class = "button" type="submit" value="送信">
                     </form>
                 </div>

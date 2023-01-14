@@ -21,7 +21,7 @@
                     <p class = "logintitle">登録完了</p>
                     <p>登録が完了しました。</p>
                         <p>メールアドレス   {{ Session::get('email') }}</p>
-                        <p>パスワード   {{ Session::get('password') }}</p><br>
+                        <p>パスワード   {{ "********" }}</p><br>
                         <a href="{{ route('user_home') }}">HOME画面へ</a>
                 </div>
             </div>

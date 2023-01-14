@@ -27,7 +27,7 @@
                     <form method ='POST' action ="{{ route('mnglogin_home') }}">
                         @csrf
                         <p>メールアドレス　<input class = "email" type="text" name="email" placeholder = "メールアドレスを入力してください。" ></p>
-                        <p>パスワード　<input class = "password" type="text" name="password" placeholder = "パスワードを入力してください。" ></p><br>
+                        <p>パスワード　<input class = "password" type="password" name="password" placeholder = "パスワードを入力してください。" ></p><br>
                         <input class = "button" type="submit" value="ログイン">
                     </form>
                 </div>

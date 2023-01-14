@@ -15,19 +15,26 @@
         <!--ヘッダ-->
         @include('header')
         <!--メイン-->
-        @if(isset($login_error))
-                <p>{{ 'ログイン失敗' }}</p>
-                <p>{{ 'メールアドレスもしくはパスワードが違います。' }}</p>
-        @endif
+       
         <div class="login color">
             <div class="background_color">
                 <div class="login_wrapper">
+                    @if(isset($login_error))
+                        <div class ='error_massage'>
+                            <p>{{ 'ログイン失敗' }}</p>
+                            <p>{{ 'メールアドレスもしくはパスワードが違います。' }}</p>
+                        </div>
+                    @endif
                     <p class = "logintitle">ログイン</p>
                     <p>新規登録は「会員登録」より行ってください。</p>
                     <form method ='POST' action ="{{ route('login.home') }}">
                         @csrf
-                        <p>メールアドレス　<input class = "email" type="text" name="email" placeholder = "メールアドレスを入力してください。" value = "{{ Session::get('email') }}" ></p>
-                        <p>パスワード　<input class = "password" type="text" name="password" placeholder = "パスワードを入力してください。"  ></p><br>
+                        <div class='mailinput'>
+                            <span>メールアドレス</span>
+                            <input type="text" name="email" placeholder = "メールアドレスを入力してください。" value = "{{ Session::get('email') }}" ></div>
+                        <div class='passinput'>
+                            <span>パスワード</span>
+                            <input  type="password" name="password" placeholder = "パスワードを入力してください。"  ><br><br></div>
                         <input class = "button" type="submit" value="ログイン">
                     </form>
                     <a class = "pw_reset_info" href="{{ route('user_pw') }}">パスワードを忘れた方はこちら</a>

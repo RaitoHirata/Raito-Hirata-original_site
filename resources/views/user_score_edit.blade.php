@@ -25,45 +25,36 @@
          
             <table class ="score">
                 <tr>
-                    <th class ="score_title">アーティスト名</th>
-                    <th > {{ $scorelink->artist_name }}</th>
+                    <th class ="score_title"><span class='mark'>アーティスト名</span></th>
+                    <th class ="linkword"> {{ $scorelink->artist_name }}</th>
                 </tr>
                 <tr>
-                    <th class ="score_title">曲名</th>
-                    <th>{{ $scorelink->song_name }}</th>
+                    <th class ="score_title"><span class='mark'>曲名</span></th>
+                    <th class ="linkword">{{ $scorelink->song_name }}</th>
                 </tr>
             </table>
         </div>
         <div class ="score_body">
         <pre> 
             <a class = "scorefile">
-            @include('file_edit')
             </a>    
         </pre>
-    <!--        <pre> 
-                <a class = "scorefile">
-                    <?php 
-                    $fp = fopen("$scorelink->path", "w+");
-                    fwrite($fp, "fagaofa");
-                    rewind($fp);
-                    while (!feof($fp)) {
-                    echo fgets($fp).'<br>';
-                    }
-                    fclose($fp);
-                    ?>
-                </a>
-            </pre>
-            ,
-                -->
-                <form method ='POST' action ="{{ route('user_score_edit') }}">
+            <a class = "edit_scorefile">
+                <form class ='edit_scorebody'method ='POST' action ="{{ route('user_score_edit')}}?id={{ $scorelink->id }}">
                 @csrf
-                <input type="text" name="memo" >
+
+                    @foreach ($rows as $row)
+                        <input type="text" name="memo" value=""><br>
+                        {{ $row }}
+                    @endforeach
+                 
                     <input  type="submit" name="flag">
                 </form>
+            </a> 
             </div>
         </div>
         <?php $role = session('role'); ?> 
-        <a class = 'return_login_search' href="{{ route('login_search') }}">HOME画面へ</a>
+        <a class = 'return_login_search' href="{{ route('login.home') }}">HOME画面へ</a>
 <!--
             @include('footer')
         -->

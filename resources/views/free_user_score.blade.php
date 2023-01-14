@@ -19,39 +19,37 @@
         @include('header')
         <!--メイン-->
         <div class="wrapper">
-            
-         
+
             <table class ="score">
                 <tr>
-                    <th class ="score_title">アーティスト名</th>
-                    <th > {{ $scorelink->artist_name }}</th>
+                    <th class ="score_title"><span class='mark'>アーティスト名</span></th>
+                    <th class ="linkword"> {{ $scorelink->artist_name }}</th>
                 </tr>
                 <tr>
-                    <th class ="score_title">曲名</th>
-                    <th>{{ $scorelink->song_name }}</th>
+                    <th class ="score_title"><span class='mark'>曲名</span></th>
+                    <th class ="linkword">{{ $scorelink->song_name }}</th>
                 </tr>
             </table>
-            <li>スクロール速度調整  遅い << 
-            <input type="radio" name="speed" value="50000" id="speed1" >
-            <input type="radio" name="speed" value="40000" id="speed2">
-            <input type="radio" name="speed" value="30000" id="speed3" checked>
-            <input type="radio" name="speed" value="20000" id="speed4">
-            <input type="radio" name="speed" value="10000" id="speed5">
-            >> 速い
+            <div class ='speed'>
+                <li >スクロール速度調整 </li>
+                     <span class = 'speedadj' >遅い << 
+                <input type="radio" name="speed" value="100000" id="speed1" >
+                <input type="radio" name="speed" value="80000" id="speed2">
+                <input type="radio" name="speed" value="70000" id="speed3" checked>
+                <input type="radio" name="speed" value="60000" id="speed4">
+                <input type="radio" name="speed" value="50000" id="speed5">
+                    >> 速い </span>
+            </div>
         </div>
         <div class ="score_body">
     
          <pre> <a class = "scorefile">
                 <?php 
-                $fp = fopen("$scorelink->path", "r");
-                while (!feof($fp)) {
-                echo fgets($fp).'<br>';
-                }
-                fclose($fp);
+                echo Storage::get($scorelink->score) ;
                 ?></a> </pre>
         <div class = 'start scrollbtn' >スクロール開始</div>
         <div class = 'stop scrollbtn' >スクロール停止</div>
-      <!--      <pre> <a class = "scorefile_stop">{{ readfile($scorelink->path) }}</a> </pre> -->
+    
         </div>
         <?php $role = session('role'); ?> 
  

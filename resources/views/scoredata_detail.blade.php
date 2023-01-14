@@ -20,20 +20,20 @@
         <div class="wrapper">
             <table class ="scoredetail">
                 <tr>
-                    <th class ="scoredetail_title">アーティスト名</th>
+                    <th class ="scoredetail_title"><span class='mark'>アーティスト名</span></th>
                     <th> {{ $scoredata_detail->artist_name }}</th>
                 </tr>
                 <tr>
-                    <th class ="scoredetail_title">曲名</th>
+                    <th class ="scoredetail_title"><span class='mark'>曲名</span></th>
                     <th>{{ $scoredata_detail->song_name }}</th>
                 </tr>
                 <tr>
-                    <th class ="scoredetail_title">ファイル名</th>
+                    <th class ="scoredetail_title"><span class='mark'>ファイル名</span></th>
                     <th>{{ $scoredata_detail->score }}</th>
                 </tr>
             </table>
         </div>
-        <pre> <div class = "scorefile">{{ readfile($scoredata_detail->path) }}</div> </pre>
+        <pre> <div class = "scorefile">{{ Storage::get($scoredata_detail->score) }}</div> </pre>
         <a class = return href="{{ route('scoredata') }}">楽譜データ編集画面へ</a>
 <!--
             @include('footer')
