@@ -20,7 +20,7 @@
         <!--メイン-->
         <div class="wrapper">
             <div class = "mylist_mark">
-                <p>マイリスト登録</p>
+                <p>マイリスト</p>
                 @if(isset($mylisted['list']))
                 <p class="favorite-marke">
                 <a class="js-like-toggle loved" href="" data-postid="{{ $scorelink->id }} ">
