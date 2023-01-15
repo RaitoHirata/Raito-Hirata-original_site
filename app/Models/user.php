@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class user extends Model
+class user extends Authenticatable
 {
+  use Notifiable;
+
   protected $table = 'user';
 
   protected $guarded = array('id');
@@ -17,7 +20,7 @@ class user extends Model
   public $timestamps = false;
 
   protected $fillable = [
-    'email', 'password','role','created_at',
+    'name','email', 'password','role','created_at',
   ];
 
   public function sendPasswordResetNotification($token)

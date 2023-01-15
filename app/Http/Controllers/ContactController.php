@@ -146,7 +146,7 @@ class ContactController extends Controller
                 
         $id = $request->id;
    //     $mylisted = user_score::select('list')->where('list',$id)->first();
-        $scorelink = score::select
+   /*     $scorelink = score::select
             ('id' , 'artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
             ->where('id','=',$id)->first();
         $request->session()->put('email', $request->email);
@@ -163,8 +163,16 @@ class ContactController extends Controller
             session()->forget('password');
             session()->put('user_id',2);
             return view('manager_home',['mylist'=>$mylist]);
-        } 
-        
+        } */
+
+        $email = $request->email;
+        $password = $request->password;
+        if (Auth::attempt(['email'=>$email,'password'=>$password])){
+            return view('user_home');
+        }else {
+            return view('/login',['login_error'=>'1']);
+        }
+        /*
         $user = user::where('email',$request->email)->get();
         if (count($user) === 0 || empty($password)){
             return view('/login',['login_error'=>'1']);
@@ -192,7 +200,7 @@ class ContactController extends Controller
             }
         } else {
             return view('/login',['login_error'=>'1']);
-        }
+        }*/
 
    
 
