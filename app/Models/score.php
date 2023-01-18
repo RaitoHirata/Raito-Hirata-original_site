@@ -17,7 +17,7 @@ class score extends Model
   public $timestamps = false;
 
   protected $fillable = [
-    'artist_name', 'song_name','score','path','role','created_at',
+    'artist_name', 'song_name','score','path','role','created_at','access_count',
   ];/*
   public function role()
   {

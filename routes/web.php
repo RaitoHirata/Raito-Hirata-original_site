@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Providers\AppServiceProvider;
-
+use App\Models\score;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,12 +18,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
+
 Route::get('/', function () {
-    return view('index') ;
+    $scorerank = score::select
+    ('artist_name as artist_name' , 'song_name as song_name' ,'access_count')
+    ->ORDERBY('access_count','DESC')->take(3)->get();
+
+    return view('index',['scorerank' => $scorerank]) ;
+    
 })->name('index');
 
 Route::post('/','Contactcontroller@search')->name('search');
-
+Route::get('/score','Contactcontroller@scorelink')->name('scorelink');
 
 Route::group(['middleware'=>['auth','can:admin-higher']],function(){
     //manager
@@ -53,7 +59,7 @@ Route::group(['middleware'=>['auth','can:user-higher']],function(){
     Route::post('/login','Contactcontroller@loginComplete')->name('home');
     Route::get('/register','Contactcontroller@register')->name('register');
     Route::get('/login/search','Contactcontroller@userHome')->name('user_home');
-    Route::get('/score','Contactcontroller@scorelink')->name('scorelink');
+
     Route::get('/login/score','Contactcontroller@loginScorelink')->name('login_scorelink');
     Route::get('/login/search','Contactcontroller@loginSearch')->name('login_search');
     Route::get('/login/scoreedit','Contactcontroller@userScoreeditview')->name('user_score_edit_view');

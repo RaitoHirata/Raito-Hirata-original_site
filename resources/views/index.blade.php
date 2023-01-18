@@ -15,8 +15,10 @@
         <!--ヘッダ-->
         @include('header')
         <!--メイン-->
+        <div class="rank">
+            @include('scorerank')
+        </div>
         <div class="wrapper">
-
             @include('search_view')
         </div>
   

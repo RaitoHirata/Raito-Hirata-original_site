@@ -64,6 +64,14 @@ class ContactController extends Controller
         $scorelink = score::select
             ('artist_name as artist_name' , 'song_name as song_name' ,'score as score','path as path')
             ->where('id','=',$id)->first();
+        $readcount = score::where('id','=',$id)->value('access_count');
+    //    dd($readcount);
+        if (isset($readcount)){
+            $addcount = $readcount + 1;
+        } else {
+            $addcount = 1;
+        }
+        score::where('id','=',$id)->update(['access_count'=>$addcount]);
         return view('free_user_score',compact('scorelink'),['scorelink'=>$scorelink]);
     }
 
