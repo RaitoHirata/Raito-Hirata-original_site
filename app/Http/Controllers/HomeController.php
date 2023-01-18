@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if (auth()->user()->role > 10 ){
+            return view('user_home');
+        } else {
+            return view('manager_home');
+        }
     }
 }

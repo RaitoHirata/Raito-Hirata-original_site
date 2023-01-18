@@ -129,6 +129,7 @@ class ContactController extends Controller
     }
 
     //ログインフォーム画面open
+    /*
     public function login(Request $request)
     {
         session()->forget('user_id');
@@ -139,7 +140,7 @@ class ContactController extends Controller
         }
         return view('login');
     }
-    
+    */
      //ログイン完了処理
     public function loginComplete(Request $request)
     {
@@ -392,10 +393,6 @@ class ContactController extends Controller
     //楽譜編集/アップロード画面open
     public function scoreData()
     {
-       
-        if(session('user_id')== null){
-            return view( 'index');
-        }
         $scoredata = score::select()->paginate(env("PAGE_MAX_LIMIT"));
         return view('scoredata',compact('scoredata'),['scoredata' => $scoredata]);
     }
@@ -403,21 +400,12 @@ class ContactController extends Controller
     //楽譜新規登録画面open
     public function scoredataRegister(Request $request)
     {
-        $url = url()->previous();
-        $referer = '/manager_home/scoredata/scoredata_register';
-        if (!strstr($url,$referer)){
-            $request->session('artist_name')->forget('artist_name');
-            $request->session('song_name')->forget('song_name');
-        }
         return view('scoredata_register');
     }
 
     //楽譜新規登録処理
     public function uplode(Request $request)
     {
-        if(session('user_id')== null){
-            return view( 'index');
-        }
         $validator = Validator::make($request->all(), [
             'artist_name' => 'required|max:255|',
             'song_name' => 'required|max:255|',

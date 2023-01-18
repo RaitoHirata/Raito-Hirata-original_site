@@ -67,7 +67,7 @@
             {{ $scoredata->links('vendor.pagination.default') }}
         </div>
             <a class = newscoretext href="{{ route('scoredata_register') }}">新規登録へ</a>
-        <a class = return href="{{ route('mnglogin_home') }}">管理者画面トップへ</a>
+        <a class = return href="{{ route('home') }}">管理者画面トップへ</a>
         
 <!--
             @include('footer')

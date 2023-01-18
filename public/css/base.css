@@ -66,9 +66,7 @@ a {
 
 html {}
 
-body {
-	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
-}
+
 
 * {
 	-webkit-box-sizing: border-box;
@@ -86,6 +84,7 @@ body {
 }
 /*header用css*/
 .header {
+	font: "MSゴシック",monospace;
 	width: 100%;
 	display: flex;
 }
