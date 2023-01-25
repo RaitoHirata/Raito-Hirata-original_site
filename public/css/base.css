@@ -149,12 +149,41 @@ body {
 
 /*index.php ホームページ用css*/
 .wrapper {
-	width:80%;
 	justify-content: center;
 	text-align: center;
 	align-items: center;
 	margin: 50px auto;
 }
+
+.wrap_contents {
+	display: flex;
+}
+.search_view {
+	display: block;
+	width:70%;
+	margin: 0 auto;
+	
+}
+
+.rank{
+	width: 20%;
+	background-color: rgb(252, 255, 255);
+	box-shadow: 0 10px 25px 0 rgba(154, 145, 145, 0.5);;
+	border: solid 1px gray;
+	border-radius: 5%;
+	text-decoration: underline;
+	font-size: 7%;
+	height: 30vh;
+}
+
+.ranktable {
+	
+}
+
+.search_result {
+	
+}
+
 
 .search_result p {
 	margin-top: 20px;
@@ -328,6 +357,7 @@ h1 {
 .password {
 	margin: 0 35px;
 }
+
 form  {
 	margin: 2%;
 	width: 100%;
@@ -346,7 +376,7 @@ form  {
 	margin-left: 1%;
 	height: 40px;
 	border-radius: 10px;
-	background-color: g;
+	font-size: 5%;
 	cursor: pointer;
 }
 
@@ -648,4 +678,11 @@ form  {
 .loved i {
 	color: rgb(255, 207, 13) !important;
   }
+
+iframe {
+	width: 80%;
+	height: 80vh;
+	margin:5% auto;
+	display: block;
+}
 

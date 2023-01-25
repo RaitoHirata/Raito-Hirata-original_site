@@ -15,13 +15,16 @@
         <!--ヘッダ-->
         @include('header')
         <!--メイン-->
-        <div class="rank">
-            @include('scorerank')
-        </div>
         <div class="wrapper">
-            @include('search_view')
+            <div class="wrap_contents">
+                <div class="rank">
+                    @include('scorerank')
+                </div>
+                
+                    @include('search_view')
+            </div>
         </div>
-  
+        
 <!--
             @include('footer')
 -->

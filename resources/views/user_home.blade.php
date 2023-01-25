@@ -20,7 +20,7 @@
         <div class="wrapper">
         @include('login_search_view')
         </div>
-  
+        <a href="{{ route('record_page') }}">録音サイト</a>
 <!--
             @include('footer')
 -->

@@ -37,6 +37,9 @@ class ContactController extends Controller
         $search = $request->input('search');
         session()->flash('search',$request->search);
         $searchtitle = $request->input('send');
+        $scorerank = score::select
+        ('artist_name as artist_name' , 'song_name as song_name' ,'access_count')
+        ->ORDERBY('access_count','DESC')->take(3)->get();
         if(isset($search)){
             $spaceConversion = mb_convert_kana($search, 's');
             $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
@@ -49,9 +52,9 @@ class ContactController extends Controller
                         })                        
                         ->get();
             }
-                return view('index', ['scores'=>$scores] , ['log_comment'=>'1']);
+                return view('index', ['scores'=>$scores , 'scorerank' => $scorerank] , ['log_comment'=>'1']);
         } else {
-            return view('index');
+            return view('index',['scorerank' => $scorerank]);
         } 
      // dd($scores);
     }
@@ -220,6 +223,12 @@ class ContactController extends Controller
     {
         
         return view('user_home');
+    }
+
+    //録音画面open
+    public function recordpage(Request $request)
+    {
+        return view('record_page');
     }
     
     //会員新規登録画面open
